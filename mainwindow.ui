@@ -34,7 +34,7 @@
        </rect>
       </property>
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="all_tables">
        <attribute name="title">
@@ -132,15 +132,38 @@
          <rect>
           <x>10</x>
           <y>220</y>
-          <width>211</width>
-          <height>281</height>
+          <width>231</width>
+          <height>351</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="id_sklad"/>
-         </item>
          <item row="2" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Дата начала</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QPushButton" name="proc">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Procedure</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
           <widget class="QLabel" name="label_13">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -150,6 +173,28 @@
            </property>
            <property name="text">
             <string>Ответ</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="id_worker"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="res_proc">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>ID рабочего</string>
            </property>
           </widget>
          </item>
@@ -167,41 +212,28 @@
             </font>
            </property>
            <property name="text">
-            <string>Процедура Get price</string>
+            <string>GetTotalOutputByWorker </string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="text">
-            <string>Номер склада:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="res_proc">
-           <property name="font">
-            <font>
-             <pointsize>12</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QPushButton" name="proc">
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_15">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Procedure</string>
+            <string>Дата конца</string>
            </property>
           </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="start_date"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="end_date"/>
          </item>
         </layout>
        </widget>
@@ -597,14 +629,14 @@ li.checked::marker { content: &quot;\2612&quot;; }
          <item row="1" column="0" colspan="2">
           <widget class="QLabel" name="label_6">
            <property name="text">
-            <string>Количество деталей в поставке, X</string>
+            <string>DefectiveParts</string>
            </property>
           </widget>
          </item>
          <item row="0" column="0" colspan="2">
           <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>Общий план, PLAN</string>
+            <string>PieceTime</string>
            </property>
           </widget>
          </item>
@@ -637,9 +669,9 @@ hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:18px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Symbol';&quot;&gt;¨ &lt;/span&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;Задача-3. Сведения о наличии деталей на складах, такие что:&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:36px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;для этой детали &lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; text-decoration: underline;&quot;&gt;имеется договорная поставка&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt; (из 09в) с планом поставки &amp;gt; $(PLAN)&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:72px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt;и &lt;/span&gt;&lt;span style=&quot; font-family:'Courier New'; text-decoration: underline;&quot;&gt;все поступления&lt;/span&gt;&lt;span style=&quot; font-family:'Courier New';&quot;&gt; (из 13б) по этой договорной поставке были в количестве  &amp;gt; $(X) каждое.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:72px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Задача-3. Все рабочие, такие что:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:72px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;имеется операция по сборке некоторой детали с временем штучным &amp;gt; 10, которую должен выполнять рабочий соответствующей профессии и квалификации, &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:72px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;	этот рабочий не допускал брака&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </widget>
@@ -652,7 +684,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

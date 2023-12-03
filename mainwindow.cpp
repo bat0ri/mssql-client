@@ -263,100 +263,73 @@ void MainWindow::on_task_3_buttom_clicked()
         ui->table_task_3->setModel(setquery1);
     } else if(type_task == 2){
 
-        QSqlTableModel *oper = new QSqlTableModel(this, db);
-        oper->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        oper->setTable("OperationCosts");
-        oper->select();
+        QSqlTableModel *personnelModel = new QSqlTableModel(this, db);
+        personnelModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        personnelModel->setTable("Personnel");
+        personnelModel->select();
 
-        QSqlTableModel *pers = new QSqlTableModel(this, db);
-        pers->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        pers->setTable("Personnel");
-        pers->select();
+        QSqlTableModel *operationModel = new QSqlTableModel(this, db);
+        operationModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        operationModel->setTable("OperationCosts");
+        operationModel->select();
 
-        QSqlTableModel *account = new QSqlTableModel(this, db);
-        account->setEditStrategy(QSqlTableModel::OnManualSubmit);
-        account->setTable("WorkAccounting");
-        account->select();
+        QSqlTableModel *workAccountingModel = new QSqlTableModel(this, db);
+        workAccountingModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        workAccountingModel->setTable("WorkAccounting");
+        workAccountingModel->select();
 
-        QStandardItemModel *result = new QStandardItemModel(0, 4, this);
-        result->setHeaderData(0, Qt::Horizontal, "WorkerNumber");
-        result->setHeaderData(1, Qt::Horizontal, "FIO");
-        result->setHeaderData(2, Qt::Horizontal, "PieceTime");
-        result->setHeaderData(3, Qt::Horizontal, "OperationNumber");
+        QStandardItemModel *resultModel = new QStandardItemModel(0, personnelModel->columnCount(), this);
+        for (int col = 0; col < personnelModel->columnCount(); ++col) {
+            resultModel->setHeaderData(col, Qt::Horizontal, personnelModel->headerData(col, Qt::Horizontal));
+        }
 
-        QModelIndex index;
-        int index_x = 0;
+        for (int personnelRow = 0; personnelRow < personnelModel->rowCount(); ++personnelRow) {
+            int professionCode = personnelModel->record(personnelRow).value("ProfessionCode").toInt();
+            int workerQualification = personnelModel->record(personnelRow).value("WorkerQualification").toInt();
 
-        for (int j = 0; j < pers->rowCount(); j++) {
-            int professionCode = pers->record(j).value("ProfessionCode").toInt();
-            int workerQualification = pers->record(j).value("WorkerQualification").toInt();
-            int workerNumber = pers->record(j).value("WorkerNumber").toInt();
+            for (int operationRow = 0; operationRow < operationModel->rowCount(); ++operationRow) {
+                if (operationModel->record(operationRow).value("ProfessionCode").toInt() == professionCode &&
+                    operationModel->record(operationRow).value("WorkerQualification").toInt() == workerQualification &&
+                    operationModel->record(operationRow).value("PieceTime").toDouble() > 0) {
 
-            // Проверяем соответствие условиям задачи
-            for (int i = 0; i < oper->rowCount(); i++) {
-                int operationProfCode = oper->record(i).value("ProfessionCode").toInt();
-                int operationWorkerQual = oper->record(i).value("WorkerQualification").toInt();
-                int operationDetailCode = oper->record(i).value("DetailCode").toInt();
-                int operationNumber = oper->record(i).value("OperationNumber").toInt();
-                int pieceTime = oper->record(i).value("PieceTime").toInt();
+                    for (int accountRow = 0; accountRow < workAccountingModel->rowCount(); ++accountRow) {
+                        if (workAccountingModel->record(accountRow).value("WorkerNumber").toInt() == personnelModel->record(personnelRow).value("WorkerNumber").toInt() &&
+                            workAccountingModel->record(accountRow).value("DetailCode").toInt() == operationModel->record(operationRow).value("DetailCode").toInt() &&
+                            workAccountingModel->record(accountRow).value("OperationNumber").toInt() == operationModel->record(operationRow).value("OperationNumber").toInt() &&
+                            workAccountingModel->record(accountRow).value("DefectiveParts").toInt() > 0) {
 
-                if (professionCode == operationProfCode && workerQualification == operationWorkerQual && pieceTime > piece_time) {
-                    bool noDefects = true;
-
-                    // Проверяем отсутствие брака для данного рабочего и операции
-                    for (int k = 0; k < account->rowCount(); k++) {
-                        int accDetailCode = account->record(k).value("DetailCode").toInt();
-                        int accOperationNumber = account->record(k).value("OperationNumber").toInt();
-                        int defectiveParts = account->record(k).value("DefectiveParts").toInt();
-                        int accWorkerNumber = account->record(k).value("WorkerNumber").toInt();
-
-                        if (workerNumber == accWorkerNumber && operationDetailCode == accDetailCode && operationNumber == accOperationNumber && defectiveParts > defect) {
-                            noDefects = false;
-                            break;
+                            QList<QStandardItem *> items;
+                            for (int column = 0; column < personnelModel->columnCount(); ++column) {
+                                QString value = personnelModel->record(personnelRow).value(column).toString();
+                                QStandardItem *item = new QStandardItem(value);
+                                items << item;
+                            }
+                            resultModel->appendRow(items);
                         }
-                    }
-
-                    if (noDefects) {
-
-                        result->appendRow(NULL);
-
-                        index = result->index(index_x, 0);
-                        result->setData(index, workerNumber);
-
-                        index = result->index(index_x, 1);
-                        result->setData(index, pers->record(j).value("FIO").toString());
-
-                        index = result->index(index_x, 2);
-                        result->setData(index, pieceTime);
-
-                        index = result->index(index_x, 3);
-                        result->setData(index, operationNumber);
-
-                        index_x++;
                     }
                 }
             }
         }
 
-        ui->table_task_3->setModel(result);
+        ui->table_task_3->setModel(resultModel);
 
     }
 
 }
 
-
-
 // Процедурка
 void MainWindow::on_proc_clicked()
 {
-    short int id_sklad = ui->id_sklad->text().toShort();
+    short int id_worker = ui->id_worker->text().toShort();
+    QString start_date = ui->start_date->text();
+    QString end_date = ui->end_date->text();
     QSqlQuery query;
-    QString sql = QString("DECLARE @a decimal(15,2) EXECUTE Get_price_sklad %1, @a out SELECT @a").arg(id_sklad);
-    //setquery1->setQuery(sql);
+    QString sql = QString("DECLARE @output INT;EXEC GetTotalOutputByWorker @WorkerNumber = %1,"
+                            " @start_date = '%2', @end_date = '%3',"
+                            " @total_output = @output OUTPUT;"
+                            "SELECT @output AS 'TotalOutput';").arg(id_worker).arg(start_date).arg(end_date);
+
     query.exec(sql);
-    //QTableView *tv = new QTableView(this);
-    //tv->setModel(setquery1);
-    //ui->Details->setModel(setquery1);
     query.first();
     QString res = query.value(0).toString();
     ui->res_proc->setText(res);
